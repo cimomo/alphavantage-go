@@ -50,8 +50,10 @@ func (req *Request) Delete(url string) (*Response, error) {
 }
 
 // NewRequest creates a base Request object.
-func NewRequest(apiKey string) *Request {
+func NewRequest(function string, symbol string, apiKey string) *Request {
 	restyReq := resty.R()
+	restyReq.SetQueryParam("function", function)
+	restyReq.SetQueryParam("symbol", symbol)
 	restyReq.SetQueryParam("apikey", apiKey)
 
 	return &Request{
