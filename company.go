@@ -6,7 +6,7 @@ import (
 	"github.com/cimomo/alphavantage-go/rest"
 )
 
-// Company defines the response body for the company overview API.
+// Company defines the response body for the GetCompanyOverview() API.
 type Company struct {
 	Symbol                     string `json:"Symbol"`
 	AssetType                  string `json:"AssetType"`
