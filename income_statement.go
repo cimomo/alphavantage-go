@@ -1,6 +1,6 @@
 package alphavantage
 
-// IncomeStatementReport defines the response body of the GetIncomeStatement() API.
+// IncomeStatementReport defines a report (annual or quarterly) in the response body of the GetIncomeStatement() API.
 type IncomeStatementReport struct {
 	FiscalDateEnding                  string `json:"fiscalDateEnding"`
 	ReportedCurrency                  string `json:"reportedCurrency"`
@@ -31,4 +31,11 @@ type IncomeStatementReport struct {
 	NetIncomeFromContinuingOperations string `json:"netIncomeFromContinuingOperations"`
 	NetIncomeApplicableToCommonShares string `json:"netIncomeApplicableToCommonShares"`
 	PreferredStockAndOtherAdjustments string `json:"preferredStockAndOtherAdjustments"`
+}
+
+// IncomeStatement defines the response body of the GetIncomeStatement() API.
+type IncomeStatement struct {
+	Symbol           string                  `json:"symbol"`
+	AnnualReports    []IncomeStatementReport `json:"annualReports"`
+	QuarterlyReports []IncomeStatementReport `json:"quarterlyReports"`
 }
