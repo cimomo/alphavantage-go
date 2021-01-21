@@ -10,12 +10,12 @@ func TestGetCompanyOverview(t *testing.T) {
 		t.Error(err)
 	}
 
-	company, err := client.GetCompanyOverview("IBM")
+	result, err := client.GetCompanyOverview("IBM")
 	if err != nil {
 		t.Error(err)
 	}
 
-	if company.Symbol != "IBM" {
+	if result.Symbol != "IBM" {
 		t.Errorf("Symbol expected: %s", "IBM")
 	}
 }
