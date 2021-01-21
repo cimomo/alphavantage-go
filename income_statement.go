@@ -47,7 +47,7 @@ type IncomeStatement struct {
 }
 
 // GetIncomeStatement returns the annual and quarterly income statement.
-func (client *Client) GetIncomeStatement(symbol string) (*Company, error) {
+func (client *Client) GetIncomeStatement(symbol string) (*IncomeStatement, error) {
 	request := rest.NewRequest("INCOME_STATEMENT", symbol, client.APIKey())
 
 	response, err := request.Get(apiServer)
@@ -60,7 +60,7 @@ func (client *Client) GetIncomeStatement(symbol string) (*Company, error) {
 		return nil, err
 	}
 
-	result, err := parseCompanyOverviewResult(response)
+	result, err := parseIncomeStatementResult(response)
 	if err != nil {
 		return nil, err
 	}
