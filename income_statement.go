@@ -1,5 +1,11 @@
 package alphavantage
 
+import (
+	"encoding/json"
+
+	"github.com/cimomo/alphavantage-go/rest"
+)
+
 // IncomeStatementReport defines a report (annual or quarterly) in the response body of the GetIncomeStatement() API.
 type IncomeStatementReport struct {
 	FiscalDateEnding                  string `json:"fiscalDateEnding"`
@@ -38,4 +44,37 @@ type IncomeStatement struct {
 	Symbol           string                  `json:"symbol"`
 	AnnualReports    []IncomeStatementReport `json:"annualReports"`
 	QuarterlyReports []IncomeStatementReport `json:"quarterlyReports"`
+}
+
+// GetIncomeStatement returns the annual and quarterly income statement.
+func (client *Client) GetIncomeStatement(symbol string) (*Company, error) {
+	request := rest.NewRequest("INCOME_STATEMENT", symbol, client.APIKey())
+
+	response, err := request.Get(apiServer)
+	if err != nil {
+		return nil, err
+	}
+
+	err = response.CheckStatusCode()
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := parseCompanyOverviewResult(response)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func parseIncomeStatementResult(response *rest.Response) (*IncomeStatement, error) {
+	result := IncomeStatement{}
+
+	err := json.Unmarshal(response.Body(), &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }
