@@ -1,5 +1,11 @@
 package alphavantage
 
+import (
+	"encoding/json"
+
+	"github.com/cimomo/alphavantage-go/rest"
+)
+
 // BalanceSheetReport defines a report (annual or quarterly) in the response body of the GetBalanceSheet() API.
 type BalanceSheetReport struct {
 	FiscalDateEnding                string `json:"fiscalDateEnding"`
@@ -60,4 +66,37 @@ type BalanceSheet struct {
 	Symbol           string               `json:"symbol"`
 	AnnualReports    []BalanceSheetReport `json:"annualReports"`
 	QuarterlyReports []BalanceSheetReport `json:"quarterlyReports"`
+}
+
+// GetBalanceSheet returns the annual and quarterly balance sheet.
+func (client *Client) GetBalanceSheet(symbol string) (*BalanceSheet, error) {
+	request := rest.NewRequest("BALANCE_SHEET", symbol, client.APIKey())
+
+	response, err := request.Get(apiServer)
+	if err != nil {
+		return nil, err
+	}
+
+	err = response.CheckStatusCode()
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := parseBalanceSheetResult(response)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func parseBalanceSheetResult(response *rest.Response) (*BalanceSheet, error) {
+	result := BalanceSheet{}
+
+	err := json.Unmarshal(response.Body(), &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }
