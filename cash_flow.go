@@ -1,5 +1,11 @@
 package alphavantage
 
+import (
+	"encoding/json"
+
+	"github.com/cimomo/alphavantage-go/rest"
+)
+
 // CashFlowReport defines a report (annual or quarterly) in the response body of the GetCashFlow() API.
 type CashFlowReport struct {
 	FiscalDateEnding               string `json:"fiscalDateEnding"`
@@ -33,4 +39,37 @@ type CashFlow struct {
 	Symbol           string           `json:"symbol"`
 	AnnualReports    []CashFlowReport `json:"annualReports"`
 	QuarterlyReports []CashFlowReport `json:"quarterlyReports"`
+}
+
+// GetCashFlow returns the annual and quarterly cash flow statements.
+func (client *Client) GetCashFlow(symbol string) (*CashFlow, error) {
+	request := rest.NewRequest("CASH_FLOW", symbol, client.APIKey())
+
+	response, err := request.Get(apiServer)
+	if err != nil {
+		return nil, err
+	}
+
+	err = response.CheckStatusCode()
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := parseCashFlowResult(response)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func parseCashFlowResult(response *rest.Response) (*CashFlow, error) {
+	result := CashFlow{}
+
+	err := json.Unmarshal(response.Body(), &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }
