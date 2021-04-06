@@ -35,6 +35,7 @@ type BalanceSheetReport struct {
 	ShortTermInvestments            string `json:"shortTermInvestments"`
 	NetReceivables                  string `json:"netReceivables"`
 	LongTermDebt                    string `json:"longTermDebt"`
+	LongTermDebtNoncurrent          string `json:"longTermDebtNoncurrent"`
 	Inventory                       string `json:"inventory"`
 	AccountsPayable                 string `json:"accountsPayable"`
 	TotalPermanentEquity            string `json:"totalPermanentEquity"`
